@@ -66,11 +66,12 @@ function execute_reply($command, $storage_name) {
     exec($command." 2>&1", $retarray, $retcode);
 
     if ($retcode !== 0) throw new Exception("The reply failed: ".implode(", ", $retarray));
-    else {
-        //- We gather the response token in a file for future authentications
-        $tmpfname = tempnam("/responses", $storage_name); //- tempnam will chmod the file to 600 i.e unalterable except by the owner of the file
-        $save_cmd = "echo '".$command."' > ".$tmpfname."";
-        unlink("request.tsq"); unlink ("response.tsr");
-    }
+
+    //- We gather the response token in a file for future authentications
+    $tmpfname = tempnam("/responses", $storage_name); //- tempnam will chmod the file to 600 i.e unalterable except by the owner of the file
+    $save_cmd = $command."' > ".$tmpfname; 
+    exec($save_cmd);
+    unlink("request.tsq"); unlink ("response.tsr");
+    
     return $retarray;
 }
