@@ -104,7 +104,7 @@ class alphaPad {
                                  return $this->plaintext;
                                 
                          }
-                         else Throw new Exception("Invalid ciphertext");
+                         else throw new Exception("Invalid ciphertext");
                 }
                 catch(Exception $e){
                         die ("An error occured");
