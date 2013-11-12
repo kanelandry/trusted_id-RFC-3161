@@ -26,7 +26,6 @@ class alphaPad {
                 try{
                         $this->ciphertext = "";
                         $this->plaintext = $plaintext;
-                        print "<div id='out'>Plaintext: ".$this->plaintext." <br>(key: ".$this->key." - padding parameter: ".$this->padding_par.")";
                         
                         //- split the plaintext into block of lenght = key lenght [1]
                         //- index each block using the key [2]
@@ -40,7 +39,6 @@ class alphaPad {
                                 $block_a = str_split($block);
                                 $tmp = array(); //- we put all the changes in a temp array first
                                 for($i = 0; $i < $this->lenght; $i++){
-                                        //$tmp[$this->key_a[$i]] = $block_a[$i]; - For the primitive permutation cipher
                                         $tmp[$this->key_a[$i]] = (int)array_search($block_a[$i], $this->alphabet)+$this->padding_par; /*[4]*/
                                         unset($block_a[$i]);        
                                 }
@@ -48,12 +46,14 @@ class alphaPad {
                                 ksort($block_a); /*[3]*/
                                 $this->ciphertext .= implode("",$block_a);
                         }
-                        //- $this->ciphertext = $this->ciphertext - $this->sub_par;  
-                        print "<br>Ciphertext: ".$this->ciphertext;
+                        $this->ciphertext = $this->ciphertext - $this->sub_par;  
+                        
+                        return $this->ciphertext;
+                        
                 }
                 catch(Exception $e){
-         die ("An error occured");
-         }
+                        die ("An error occured");
+                }
                 
         }
         
@@ -69,9 +69,8 @@ class alphaPad {
                 try{                
                         $this->plaintext = "";
                         $this->ciphertext = $ciphertext;
-                        //- $this->ciphertext = $this->ciphertext + $this->sub_par;  
-                        print "<div id='out'>Ciphertext: ".$this->ciphertext." <br>(key: ".$this->key." - padding parameter: ".$this->padding_par.")";
-
+                        $this->ciphertext = $this->ciphertext + $this->sub_par;  
+            
                         //- split the ciphertext into block of lenght = string lenght of the items in $alphabet = 2 [1]
                         //- for each block, unpad and map to the alphabet character [2]
                         //- form super-block of lenght = key lenght [3]
@@ -101,14 +100,15 @@ class alphaPad {
                                         $block_a = $this->referential_ksort($block_a,$this->key); /*[6]*/
                                         $this->plaintext .= implode("", $block_a);
                                  }
-                                 print "<br>Plaintext: ".$this->plaintext;
+                                 
+                                 return $this->plaintext;
                                 
                          }
-                         else echo "Invalid ciphertext";
+                         else Throw new Exception("Invalid ciphertext");
                 }
                 catch(Exception $e){
-         die ("An error occured");
-         }
+                        die ("An error occured");
+                }
         }
         
         private function referential_ksort($array, $sequence){
